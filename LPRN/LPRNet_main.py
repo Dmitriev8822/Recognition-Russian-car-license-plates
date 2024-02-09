@@ -58,12 +58,13 @@ def decode(preds, CHARS):
     return labels, np.array(pred_labels)
 
 
-def main(cnt):
-    path = r'C:\Users\Dima\Documents\permanent_folder\TEMP{:04d}.jpg'.format(cnt)
-    parser = argparse.ArgumentParser(description='LPR Demo')
-    parser.add_argument("-image", help='image path', default=path,
-                        type=str)
-    args = parser.parse_args()
+def main(image):
+    # path = r'C:\Users\Dima\Documents\permanent_folder\TEMP{:04d}.jpg'.format(cnt)
+    # parser = argparse.ArgumentParser(description='LPR Demo')
+    # parser.add_argument("-image", help='image path', default=path,
+    #                     type=str)
+    # args = parser.parse_args()
+
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
     lprnet = LPRNet(class_num=len(CHARS), dropout_rate=0)
@@ -79,7 +80,7 @@ def main(cnt):
     # print("Successful to build network!")
 
     since = time.time()
-    image = cv2.imread(args.image)
+    # image = cv2.imread(args.image)
     im = cv2.resize(image, (94, 24), interpolation=cv2.INTER_CUBIC)
     im = (np.transpose(np.float32(im), (2, 0, 1)) - 127.5) * 0.0078125
     data = torch.from_numpy(im).float().unsqueeze(0).to(device)  # torch.Size([1, 3, 24, 94]) 
@@ -87,9 +88,9 @@ def main(cnt):
     preds = lprnet(transfer)
     preds = preds.cpu().detach().numpy()  # (1, 68, 18)
 
-    transformed_img = convert_image(transfer)
-    path_to_redsave = r'C:\Users\Dima\Documents\permanent_folder\red_img_{:04d}.jpg'.format(cnt)
-    cv2.imwrite(path_to_redsave, transformed_img)
+    # transformed_img = convert_image(transfer)
+    # path_to_redsave = r'C:\Users\Dima\Documents\permanent_folder\red_img_{:04d}.jpg'.format(cnt)
+    # cv2.imwrite(path_to_redsave, transformed_img)
 
     labels, pred_labels = decode(preds, CHARS)
     return labels[0]

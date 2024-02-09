@@ -4,6 +4,12 @@ from PyQt5.QtWidgets import QApplication, QLabel, QMainWindow, QVBoxLayout, QWid
 from PyQt5.QtCore import QTimer, Qt
 from PyQt5.QtGui import QPixmap, QImage, QPainter
 
+import os
+import cv2
+from YOLO.yolov8 import main as nn
+
+FPS = 20
+
 class VideoWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -19,11 +25,13 @@ class VideoWindow(QMainWindow):
         self.cap = cv2.VideoCapture(0)
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.update_frame)
-        self.timer.start(1000/30)  # 30 fps
+        fps = 1000 // FPS # 30 fps
+        self.timer.start(fps)
 
     def update_frame(self):
         ret, frame = self.cap.read()
         if ret:
+            frame = nn(frame)
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             frame = QImage(frame, frame.shape[1], frame.shape[0], QImage.Format_RGB888)
             self.video_label.setPixmap(QPixmap.fromImage(frame))
