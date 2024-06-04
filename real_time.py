@@ -26,8 +26,6 @@ class VideoWindow(QMainWindow):
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.update_frame)
         fps = 1000 // FPS # 30 fps
-        self.timer.start(fps)
-
     def update_frame(self):
         ret, frame = self.cap.read()
         if ret:

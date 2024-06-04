@@ -46,9 +46,9 @@ def main(image):
 
     # clear_temp_folder()
 
-    # cv2.imshow('image', image)
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
+    cv2.imshow('image', image)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
 
     return image
 
